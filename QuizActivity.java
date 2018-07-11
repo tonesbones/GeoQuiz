@@ -31,15 +31,14 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-        int question = mQuestionBank[mCurrectIndex].getTextResId();
-        mQuestionTextView.setText(question);
+
 
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(QuizActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
+                checkAnswer(true);
 
             }
         });
@@ -49,8 +48,8 @@ public class QuizActivity extends AppCompatActivity {
         mFalseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(QuizActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
 
+                    checkAnswer(false);
             }
         });
 
@@ -59,12 +58,29 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mCurrectIndex = (mCurrectIndex + 1)% mQuestionBank.length;
-                int question = mQuestionBank[mCurrectIndex].getTextResId();
-                mQuestionTextView.setText(question);
+
             }
         });
-
-
-
+        updateQuestion();
     }
+private void  updateQuestion(){
+    int question = mQuestionBank[mCurrectIndex].getTextResId();
+    mQuestionTextView.setText(question);
+}
+
+private void checkAnswer(boolean userPressedTrue) {
+    boolean answerIsTrue = mQuestionBank[mCurrectIndex].isAnswerTrue();
+
+    int messageResId = 0;
+
+    if (userPressedTrue == answerIsTrue) {
+        messageResId = R.string.correct_toast;
+    } else {
+        messageResId = R.string.incorrect_toast;
+    }
+    Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
+            .show();
+
+
+}
 }
